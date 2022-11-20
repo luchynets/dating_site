@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>MyOwnDateSite. Main page</title>
+	<style>
+		header{
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+		}
+
+		.butts{
+			display: flex;
+			width: 5%; 
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.log{
+			text-decoration: none;
+			font-weight: bold;
+			border: black 1px solid;
+			border-radius: 5px;
+			background-color: silver;
+			color: #000;
+			padding: 12% 25%;
+			width: 300px;
+			text-align: center;
+		}
+
+		.profile{
+			margin-left: 10%;
+		}
+
+		.profile>img{
+			width: 40px;
+			height: 40px;
+		}
+
+		hr{
+			width: 90%;
+		}
+
+		content{
+			padding-top: 6%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.photo{
+			width: 100%;
+			height: 500px;
+			border-radius: 30px;
+		}
+
+		button{
+			background: none;
+			border: none;
+			cursor: pointer;
+		}
+
+		button>img{
+			width: 30px;
+			height: 30px;
+		}
+
+		.butts>p{
+			font-weight: bold;
+			background-color: red;
+			padding: 3% 7%;
+			border-radius: 20px;
+			margin-bottom: 40%;
+			margin-left: -10%;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<h2 class="logo">MyOwnDateSite</h2>
+		<div class="butts">
+			{% if username %}
+				<a href="/logout" class="log">Logout</a>
+				<a href="/myprofile" class="profile"><img src="https://www.freeiconspng.com/thumbs/profile-icon-png/am-a-19-year-old-multimedia-artist-student-from-manila--21.png" alt=""></a>
+				{% if unchecked_messages != 0 %}
+					<p>{{ unchecked_messages }}</p>
+				{% endif %}
+			{% else %}
+				<a href="/login" class="log">Login</a>
+			{% endif %}
+		</div>
+		
+	</header>
+	<hr/>
+	<content>
+		{% if username %}
+			<div class="questionnaire">
+				<img src="{{ url_for('static', filename=photo_url ) }}" alt="" class="photo" id="photo">
+				<h3 class="data" id="data">{{ information }}</h3>
+				<hr/>
+				<form action="" method="GET" class="buttons">
+					<button onclick="refreshFeed('like', '{{ user_name }}')" id="setlike"><img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/blue-like-button-icon.png" alt=""></button>
+					<button onclick="refreshFeed('dislike', 'none')"><img src="http://www.clker.com/cliparts/5/2/5/8/13476359851958638477thumbs-down-icon-red-hi.png" alt=""></button>
+				</form>
+			</div>
+		{% else %}
+			<h1>Login before you start!</h1>
+		{% endif %}
+	</content>
+
+	<script>
+		var liked_user = '';
+
+		function refreshFeed(action, username) {
+		  event.preventDefault();
+
+		  const xmlhttp = new XMLHttpRequest();
+		  xmlhttp.onload = function() {
+		      document.getElementById("data").innerHTML = JSON.parse(this.responseText).string;
+		      let photo_url = JSON.parse(this.responseText).photo_url;
+		      document.getElementById("photo").setAttribute('src', "/static/" + photo_url);
+		      window.liked_user = JSON.parse(this.responseText).username;
+		      if (action == 'like') {
+			    const set_like = new XMLHttpRequest();
+			    set_like.onload = function() {
+			      document.getElementById("setlike").setAttribute('onclick', "refreshFeed('like', '" + window.liked_user + "')");
+		        }
+			    set_like.open("GET", "http://127.0.0.1:5000/setlike/" + username);
+			    set_like.send();
+			  }else{
+			    document.getElementById("setlike").setAttribute('onclick', "refreshFeed('like', '" + window.liked_user + "')");
+			  }	
+		  }
+		  xmlhttp.open("GET", "http://127.0.0.1:5000/api");
+		  xmlhttp.send();
+		}
+	</script>
+</body>
+</html>

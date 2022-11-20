@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>MyOwnDateSite. Register page</title>
+	<style>
+		body, form{
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+		}
+		
+		input, button{
+			margin: 5%;
+			width: 100%;
+			padding: 1.4%;
+		}
+
+		button{
+			font-weight: bold;
+		}
+
+		.gender{
+			display: flex;
+			margin: 5%;
+			align-items: center;
+			justify-content: center;
+		}
+	</style>
+</head>
+<body>
+	<h1 class="logo">MyOwnDateSite</h1>
+	<form action="" method="POST">
+		<input name="first_name" type="text" placeholder="First name" required="">
+		<input name="last_name" type="text" placeholder="Last name" required="">
+		<input name="login" type="text" placeholder="Login" required="">
+		<input name="password" type="password" placeholder="Password" required="">
+		<input type="number" name="age" placeholder="Age" required="" min="14">
+		<div class="gender">
+			<input name="gender" type="radio" value="male">
+			Male
+			<input name="gender" type="radio" value="female">
+			Female
+		</div>	
+        <button type="submit">Register</button>
+	</form>
+	<p>If you have an account, <a href="/login">Login</a></p>
+</body>
+</html>
